@@ -269,7 +269,7 @@ test_all_html_files_exist PASSED ✅
 python -m pytest tests/test_all_slides_complete.py::TestAllSlidesComplete::test_all_slides_no_font_warnings -v
 
 # בדיקה שכל השקפים מתבצעים ללא שגיאות
-python -m pytest tests/test_all_slides_complete.py::TestAllSlidesComplete::test_slide_01_execution tests/test_all_slides_complete.py::TestAllSlidesComplete::test_slide_05_execution tests/test_all_slides_complete.py::TestAllSlidesComplete::test_slide_10_execution -v
+python -m pytest tests/test_all_slides_complete.py::TestAllSlidesComplete::test_slide_01a_execution tests/test_all_slides_complete.py::TestAllSlidesComplete::test_slide_01b_execution tests/test_all_slides_complete.py::TestAllSlidesComplete::test_slide_01c_execution tests/test_all_slides_complete.py::TestAllSlidesComplete::test_slide_05_execution tests/test_all_slides_complete.py::TestAllSlidesComplete::test_slide_10_execution -v
 
 # בדיקה שהתוכנית הראשית עובדת
 python -m pytest tests/test_main_advanced.py::TestMainAdvanced::test_main_list_command -v
@@ -453,37 +453,49 @@ python main.py --list
 
 **תוצאה צפויה:**
 ```
-שקפים זמינים:
+Available Slides:
 ----------------------------------------
- 1. מבוא להסתברות
- 2. התפלגות אחידה
- 3. התפלגות נורמלית
- 4. התפלגות בינומית
- 5. התפלגות פואסון
- 6. מדדי נטייה מרכזית
- 7. מדדי פיזור
- 8. מתאם וקורלציה
- 9. אנטרופיה של שאנון
-10. דיברגנס KL ואנטרופיה צולבת
+ 1a. Basic Probability Concepts
+ 1b. Frequencies from Simulation  
+ 1c. Histogram of 1000 Rolls
+  2. Uniform Distribution
+  3. Normal Distribution
+  4. Binomial Distribution
+  5. Poisson Distribution
+  6. Measures of Central Tendency
+  7. Measures of Dispersion
+  8. Correlation and Correlation Matrix
+  9. Shannon Entropy
+ 10. KL Divergence and Cross-Entropy
 ```
 
 ##### **הרצת שקף יחיד:**
 ```bash
-# הרצת שקף 1
-python main.py --slide 1
+# הרצת השקפים החדשים
+python main.py --slide 1a  # מושגי יסוד בהסתברות
+python main.py --slide 1b  # תדירויות מסימולציה
+python main.py --slide 1c  # היסטוגרמה של 1000 הטלות
+
+# הרצת שקפים קיימים
+python main.py --slide 2   # התפלגות אחידה
+python main.py --slide 3   # התפלגות נורמלית
+python main.py --slide 10  # KL Divergence
 ```
 
-**מה יקרה:**
+**מה יקרה (דוגמה לשקף 1א):**
 1. **פלט טקסט** - הסברים ותוצאות חישובים:
 ```
-שקף 1: מבוא להסתברות
-מרצה: דר. יורם סגל
-============================================================
-=== חישוב הסתברויות זריקת קובייה ===
-הסתברות לכל תוצאה: 0.167
-הסתברות למספר זוגי: 0.500
-הסתברות למספר אי-זוגי: 0.500
-הסתברות למספר גדול מ-4: 0.333
+Slide 1a: Basic Probability Concepts
+Lecturer: Dr. Yoram Segal
+==================================================
+=== Basic Probability Concepts ===
+1. SAMPLE SPACE (Ω):
+   DEFINITION: The set of all possible outcomes of an experiment
+   FORMULA: Ω = {ω₁, ω₂, ..., ωₙ}
+   For a dice: Ω = {1, 2, 3, 4, 5, 6}
+   PYTHON CODE:
+   sample_space = list(range(1, 7))  # [1, 2, 3, 4, 5, 6]
+   → Sample space size: 6
 ```
 
 2. **גרפים אינטראקטיביים** - יפתחו חלונות matplotlib עם:
@@ -503,10 +515,10 @@ python main.py --all
 ```
 
 **מה יקרה:**
-- הרצה רצופה של כל 10 השקפים
+- הרצה רצופה של כל 12 השקפים (1א, 1ב, 1ג, 2-10)
 - כל שקף יציג את התוכן שלו
 - יווצרו עשרות גרפים וקבצי תמונות
-- זמן ריצה: כ-2-3 דקות
+- זמן ריצה: כ-3-4 דקות
 
 **כותרת התוכנית תציג:**
 ```
@@ -724,7 +736,9 @@ python main.py --slide 1
 
 | מספר | נושא | תיאור | טכנולוגיות |
 |------|------|--------|-------------|
-| 01 | מבוא להסתברות | מושגי יסוד, זריקת קובייה | Chart.js |
+| 1א | מושגי יסוד בהסתברות | Sample Space, Events, Axioms | Chart.js |
+| 1ב | תדירויות מסימולציה | Law of Large Numbers, Chi-square | Chart.js |
+| 1ג | היסטוגרמה של 1000 הטלות | Statistical Analysis, Sampling | Chart.js |
 | 02 | התפלגות אחידה | מאפיינים וויזואליזציה | Chart.js |
 | 03 | התפלגות נורמלית | עקומת הפעמון, חוק 68-95-99.7 | D3.js |
 | 04 | התפלגות בינומית | ניסויים בינאריים | Chart.js |
@@ -734,6 +748,8 @@ python main.py --slide 1
 | 08 | מתאם וקורלציה | מטריצת מתאם אינטראקטיבית | D3.js |
 | 09 | אנטרופיה של שאנון | מדידת אי-ודאות | Chart.js |
 | 10 | דיברגנס KL | מרחק בין התפלגויות | Chart.js |
+
+**סה"כ: 12 שקפים** (שקף 1 פוצל ל-3 שקפים נפרדים לבהירות מקסימלית)
 
 ### 🧪 טסטים
 

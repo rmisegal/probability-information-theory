@@ -50,8 +50,14 @@ def print_header():
 def import_slide_module(slide_number):
     """Import slide module by number"""
     try:
-        slide_dir = f"slide{slide_number:02d}"
-        module_name = f"{slide_dir}.{slide_dir}_main"
+        # Handle special cases for split slides
+        if slide_number in ["1a", "1b", "1c"]:
+            slide_dir = f"slide0{slide_number}"
+            module_name = f"{slide_dir}.{slide_dir}_main"
+        else:
+            slide_dir = f"slide{int(slide_number):02d}"
+            module_name = f"{slide_dir}.{slide_dir}_main"
+        
         module = __import__(module_name, fromlist=[slide_dir])
         return module
     except ImportError as e:
@@ -105,7 +111,9 @@ def run_all_slides():
 def list_slides():
     """Display list of available slides"""
     slides_info = [
-        (1, "Introduction to Probability"),
+        ("1a", "Basic Probability Concepts"),
+        ("1b", "Frequencies from Simulation"),
+        ("1c", "Histogram of 1000 Rolls"),
         (2, "Uniform Distribution"),
         (3, "Normal Distribution"),
         (4, "Binomial Distribution"),
@@ -120,7 +128,7 @@ def list_slides():
     print("Available Slides:")
     print("-" * 40)
     for num, title in slides_info:
-        print(f"{num:2d}. {title}")
+        print(f"{str(num):>3}. {title}")
 
 def run_tests():
     """Run all tests including advanced output validation tests"""
@@ -212,8 +220,9 @@ Usage Examples:
     )
     
     group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument('--slide', '-s', type=int, choices=range(1, 11),
-                      help='Slide number to run (1-10)')
+    group.add_argument('--slide', '-s', type=str, 
+                      choices=['1a', '1b', '1c', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
+                      help='Slide number to run (1a, 1b, 1c, 2-10)')
     group.add_argument('--all', '-a', action='store_true',
                       help='Run all slides')
     group.add_argument('--list', '-l', action='store_true',
