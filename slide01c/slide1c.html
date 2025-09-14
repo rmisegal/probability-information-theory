@@ -6,6 +6,7 @@
     <title>מבוא להסתברות</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
         .slide-container {
@@ -67,23 +68,26 @@
                 <div>
                     <h3 class="text-lg font-semibold text-gray-700 mb-2">קוד Python:</h3>
                     <div class="code-block">
-<span class="python-comment"># יצירת היסטוגרמה של 1000 הטלות</span>
+<span class="python-comment"># יצירת היסטוגרמה עם תוויות נתונים</span>
 <span class="python-keyword">import</span> matplotlib.pyplot <span class="python-keyword">as</span> plt
 <span class="python-keyword">import</span> numpy <span class="python-keyword">as</span> np
 
 <span class="python-comment"># נתוני הסימולציה</span>
 rolls = np.random.randint(1, 7, 1000)
-bins = np.arange(0.5, 7.5, 1)  <span class="python-comment"># 6 bins עבור 1-6</span>
+unique, counts = np.unique(rolls, return_counts=True)
 
 <span class="python-comment"># יצירת היסטוגרמה</span>
-plt.hist(rolls, bins=bins, alpha=0.7, edgecolor='black')
+bars = plt.bar(unique, counts, alpha=0.7, edgecolor='black')
+
+<span class="python-comment"># הוספת תוויות נתונים בראש כל עמודה</span>
+<span class="python-keyword">for</span> bar, count <span class="python-keyword">in</span> zip(bars, counts):
+    plt.text(bar.get_x() + bar.get_width()/2, 
+             bar.get_height() + 2, str(count), 
+             ha=<span class="python-string">'center'</span>, fontweight=<span class="python-string">'bold'</span>)
+
 plt.xlabel(<span class="python-string">'Dice Outcome'</span>)
 plt.ylabel(<span class="python-string">'Frequency'</span>)
 plt.title(<span class="python-string">'Histogram of 1000 Dice Rolls'</span>)
-
-<span class="python-comment"># הוספת קו תיאורטי</span>
-expected = 1000/6  <span class="python-comment"># ~166.67</span>
-plt.axhline(y=expected, color='red', linestyle='--')
                     </div>
                 </div>
             </div>
@@ -91,7 +95,7 @@ plt.axhline(y=expected, color='red', linestyle='--')
             <!-- Right Side - Chart -->
             <div class="flex flex-col justify-between">
                 <div class="bg-white rounded-lg shadow-lg p-4">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-3 text-center">הסתברות זריקת קובייה הוגנת</h3>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3 text-center">היסטוגרמה של 1000 הטלות קובייה</h3>
                     <div style="height: 300px;">
                         <canvas id="diceChart"></canvas>
                     </div>
@@ -101,7 +105,8 @@ plt.axhline(y=expected, color='red', linestyle='--')
                 <div class="p-3 bg-blue-50 rounded-lg">
                     <h4 class="font-semibold text-blue-800 mb-1">ניתוח הגרף:</h4>
                     <div class="text-sm text-blue-700">
-                        <strong>ציר X:</strong> תוצאות (1-6) | <strong>ציר Y:</strong> הסתברות | <strong>מסקנה:</strong> כל תוצאה = 1/6 ≈ 0.167
+                        <strong>ציר X:</strong> תוצאות (1-6) | <strong>ציר Y:</strong> מספר הופעות<br>
+                        <strong>תוויות:</strong> מספר ההופעות מוצג בראש כל עמודה | <strong>מסקנה:</strong> התפלגות קרובה לאחידה
                     </div>
                 </div>
             </div>
@@ -109,7 +114,7 @@ plt.axhline(y=expected, color='red', linestyle='--')
 
         <!-- Footer -->
         <div class="mt-4 text-center">
-            <p class="text-sm text-gray-600">קובץ Python: slide1_probability_basics.py</p>
+            <p class="text-sm text-gray-600">קובץ Python: slide01c_main.py</p>
             <p class="text-xs text-gray-400 mt-2" style="opacity: 0.6;">© כל הזכויות שמורות לדר. יורם סגל</p>
         </div>
     </div>
@@ -124,10 +129,20 @@ plt.axhline(y=expected, color='red', linestyle='--')
                 data: {
                     labels: ['1', '2', '3', '4', '5', '6'],
                     datasets: [{
-                        label: 'הסתברות',
-                        data: [0.167, 0.167, 0.167, 0.167, 0.167, 0.167],
-                        backgroundColor: '#12377A',
-                        borderColor: '#0f2d5f',
+                        label: 'מספר הופעות',
+                        data: [181, 164, 154, 174, 172, 155],
+                        backgroundColor: [
+                            '#ff6b6b', // 1: אדום - סטייה גבוהה (+14)
+                            '#4ecdc4', // 2: ירוק - קרוב לצפוי (-3)
+                            '#ff9f43', // 3: כתום - סטייה בינונית (-13)
+                            '#4ecdc4', // 4: ירוק - קרוב לצפוי (+7)
+                            '#4ecdc4', // 5: ירוק - קרוב לצפוי (+5)
+                            '#ff9f43'  // 6: כתום - סטייה בינונית (-12)
+                        ],
+                        borderColor: [
+                            '#e55555', '#45b7aa', '#e8890b', 
+                            '#45b7aa', '#45b7aa', '#e8890b'
+                        ],
                         borderWidth: 2,
                         borderRadius: 4
                     }]
@@ -137,23 +152,30 @@ plt.axhline(y=expected, color='red', linestyle='--')
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
+                            display: false
+                        },
+                        datalabels: {
                             display: true,
-                            position: 'top',
-                            labels: {
-                                font: {
-                                    family: 'Heebo',
-                                    size: 14
-                                }
+                            anchor: 'end',
+                            align: 'top',
+                            font: {
+                                family: 'Heebo',
+                                size: 16,
+                                weight: 'bold'
+                            },
+                            color: '#333',
+                            formatter: function(value) {
+                                return value;
                             }
                         }
                     },
                     scales: {
                         y: {
                             beginAtZero: true,
-                            max: 0.2,
+                            max: 200,
                             title: {
                                 display: true,
-                                text: 'הסתברות',
+                                text: 'מספר הופעות',
                                 font: {
                                     family: 'Heebo',
                                     size: 14
