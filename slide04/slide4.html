@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>התפלגות בינומית</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            background: #F2F9FC;
+            font-family: 'Heebo', sans-serif;
+            direction: rtl;
+        }
+        .title {
+            color: #12377A;
+            font-size: 36px;
+            font-weight: 700;
+        }
+        .content-text {
+            color: #858481;
+            font-size: 20px;
+            line-height: 1.3;
+        }
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #495057;
+            direction: ltr;
+            text-align: left;
+        }
+        .python-keyword { color: #0000ff; }
+        .python-string { color: #008000; }
+        .python-comment { color: #808080; }
+    </style>
+</head>
+<body>
+    <div class="slide-container flex flex-col p-6">
+        <!-- Header -->
+        <div class="mb-4">
+            <h1 class="title">התפלגות בינומית</h1>
+            <div class="w-16 h-1 bg-blue-600 mt-2"></div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 grid grid-cols-2 gap-6">
+            <!-- Left Side - Text and Code -->
+            <div class="flex flex-col justify-between">
+                <div class="content-text">
+                    <p class="mb-3">
+                        <strong>התפלגות בינומית</strong> מתארת מספר הצלחות ב-n ניסויים בלתי תלויים, כאשר כל ניסוי בעל הסתברות p להצלחה.
+                    </p>
+                    <ul class="list-disc list-inside space-y-1 mr-4">
+                        <li>n = מספר הניסויים</li>
+                        <li>p = הסתברות להצלחה בניסוי יחיד</li>
+                        <li>k = מספר ההצלחות (0 ≤ k ≤ n)</li>
+                        <li>דוגמה: זריקת מטבע n פעמים</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-700 mb-2">קוד Python:</h3>
+                    <div class="code-block">
+<span class="python-keyword">from</span> scipy <span class="python-keyword">import</span> stats
+<span class="python-keyword">import</span> numpy <span class="python-keyword">as</span> np
+
+<span class="python-comment"># פרמטרים</span>
+n = 20  <span class="python-comment"># מספר ניסויים</span>
+p = 0.5  <span class="python-comment"># הסתברות להצלחה</span>
+
+<span class="python-comment"># חישוב הסתברויות</span>
+k_values = np.arange(0, n+1)
+probabilities = stats.binom.pmf(k_values, n, p)
+
+<span class="python-comment"># ממוצע ושונות</span>
+mean = n * p
+variance = n * p * (1 - p)
+<span class="python-keyword">print</span>(<span class="python-string">f"ממוצע: {mean}, שונות: {variance}"</span>)
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side - Chart -->
+            <div class="flex flex-col">
+                <div class="bg-white rounded-lg shadow-lg p-4 flex-1">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3 text-center">התפלגות בינומית עם ערכי p שונים</h3>
+                    <div style="height: 350px;">
+                        <canvas id="binomialChart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- Chart Analysis -->
+                <div class="mt-3 p-3 bg-blue-50 rounded-lg">
+                    <h4 class="font-semibold text-blue-800 mb-1">ניתוח הגרף:</h4>
+                    <div class="text-sm text-blue-700">
+                        <strong>ציר X:</strong> מספר הצלחות (k) | <strong>ציר Y:</strong> הסתברות | <strong>צבעים:</strong> כחול p=0.3, אדום p=0.5, ירוק p=0.7
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-4 text-center">
+            <p class="text-sm text-gray-600">קובץ Python: slide4_binomial_distribution.py</p>
+            <p class="text-xs text-gray-400 mt-2" style="opacity: 0.6;">© כל הזכויות שמורות לדר. יורם סגל</p>
+        </div>
+    </div>
+
+    <script>
+        // Binomial probability mass function
+        function binomialPMF(n, k, p) {
+            function factorial(num) {
+                if (num <= 1) return 1;
+                return num * factorial(num - 1);
+            }
+            
+            function combination(n, k) {
+                return factorial(n) / (factorial(k) * factorial(n - k));
+            }
+            
+            return combination(n, k) * Math.pow(p, k) * Math.pow(1 - p, n - k);
+        }
+
+        // Generate data for different p values
+        const n = 20;
+        const pValues = [0.3, 0.5, 0.7];
+        const colors = ['#12377A', '#DC2626', '#059669'];
+        const labels = [];
+        
+        for (let k = 0; k <= n; k++) {
+            labels.push(k.toString());
+        }
+
+        const datasets = pValues.map((p, index) => {
+            const data = [];
+            for (let k = 0; k <= n; k++) {
+                data.push(binomialPMF(n, k, p));
+            }
+            
+            return {
+                label: `p = ${p}`,
+                data: data,
+                backgroundColor: colors[index],
+                borderColor: colors[index],
+                borderWidth: 1,
+                borderRadius: 2
+            };
+        });
+
+        const ctx = document.getElementById('binomialChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: datasets
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: { 
+                            font: { family: 'Heebo', size: 12 },
+                            usePointStyle: true
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'הסתברות',
+                            font: { family: 'Heebo', size: 12 }
+                        },
+                        ticks: {
+                            font: { family: 'Heebo', size: 10 }
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'מספר הצלחות (k)',
+                            font: { family: 'Heebo', size: 12 }
+                        },
+                        ticks: {
+                            font: { family: 'Heebo', size: 10 }
+                        }
+                    }
+                },
+                interaction: {
+                    mode: 'index',
+                    intersect: false
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+

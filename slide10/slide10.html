@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>דיברגנס KL ואנטרופיה צולבת</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            background: #F2F9FC;
+            font-family: 'Heebo', sans-serif;
+            direction: rtl;
+        }
+        .title {
+            color: #12377A;
+            font-size: 36px;
+            font-weight: 700;
+        }
+        .content-text {
+            color: #858481;
+            font-size: 20px;
+            line-height: 1.3;
+        }
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #495057;
+            direction: ltr;
+            text-align: left;
+        }
+        .python-keyword { color: #0000ff; }
+        .python-string { color: #008000; }
+        .python-comment { color: #808080; }
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            font-size: 12px;
+        }
+        .metric-item {
+            background: #f8f9fa;
+            padding: 6px;
+            border-radius: 4px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container flex flex-col p-6">
+        <!-- Header -->
+        <div class="mb-4">
+            <h1 class="title">דיברגנס KL ואנטרופיה צולבת</h1>
+            <div class="w-16 h-1 bg-blue-600 mt-2"></div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 grid grid-cols-2 gap-6">
+            <!-- Left Side - Text and Code -->
+            <div class="flex flex-col justify-between">
+                <div class="content-text">
+                    <p class="mb-3">
+                        <strong>דיברגנס KL</strong> מודד את המרחק בין שתי התפלגויות הסתברות.
+                    </p>
+                    <ul class="list-disc list-inside space-y-1 mr-4">
+                        <li><strong>KL(P||Q):</strong> מרחק מ-P ל-Q</li>
+                        <li><strong>אנטרופיה צולבת:</strong> H(P,Q) = H(P) + KL(P||Q)</li>
+                        <li><strong>שימוש:</strong> למידת מכונה ובחירת מודלים</li>
+                        <li><strong>ערך 0:</strong> התפלגויות זהות</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-700 mb-2">קוד Python:</h3>
+                    <div class="code-block">
+<span class="python-keyword">import</span> numpy <span class="python-keyword">as</span> np
+<span class="python-keyword">from</span> scipy <span class="python-keyword">import</span> stats
+
+<span class="python-comment"># פונקציות חישוב</span>
+<span class="python-keyword">def</span> <span class="python-keyword">kl_divergence</span>(p, q):
+    <span class="python-keyword">return</span> np.sum(p * np.log(p / q))
+
+<span class="python-keyword">def</span> <span class="python-keyword">cross_entropy</span>(p, q):
+    <span class="python-keyword">return</span> -np.sum(p * np.log(q))
+
+<span class="python-comment"># התפלגות אמיתית</span>
+p_true = stats.norm.pdf(x, 5, 1)
+p_true = p_true / np.sum(p_true)
+
+<span class="python-comment"># קירובים שונים</span>
+q1 = stats.norm.pdf(x, 5, 1.2)  <span class="python-comment"># קירוב טוב</span>
+q2 = stats.norm.pdf(x, 4.5, 1.5)  <span class="python-comment"># קירוב בינוני</span>
+
+<span class="python-keyword">print</span>(<span class="python-string">f"KL1: {kl_divergence(p_true, q1):.3f}"</span>)
+<span class="python-keyword">print</span>(<span class="python-string">f"KL2: {kl_divergence(p_true, q2):.3f}"</span>)
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side - Chart -->
+            <div class="flex flex-col">
+                <div class="bg-white rounded-lg shadow-lg p-4 flex-1">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3 text-center">השוואת התפלגויות - דיברגנס KL</h3>
+                    <div style="height: 280px;">
+                        <canvas id="klChart"></canvas>
+                    </div>
+                    
+                    <!-- Metrics Display -->
+                    <div class="mt-3 metrics-grid">
+                        <div class="metric-item"><strong>KL טוב:</strong> <span id="kl1">0.042</span></div>
+                        <div class="metric-item"><strong>KL בינוני:</strong> <span id="kl2">0.156</span></div>
+                        <div class="metric-item"><strong>KL גרוע:</strong> <span id="kl3">0.387</span></div>
+                        <div class="metric-item"><strong>אנטרופיה צולבת:</strong> <span id="ce">1.42</span></div>
+                    </div>
+                </div>
+                
+                <!-- Chart Analysis -->
+                <div class="mt-3 p-3 bg-blue-50 rounded-lg">
+                    <h4 class="font-semibold text-blue-800 mb-1">ניתוח הגרף:</h4>
+                    <div class="text-sm text-blue-700">
+                        <strong>קו שחור:</strong> התפלגות אמיתית P | <strong>קווים צבעוניים:</strong> קירובים Q | <strong>מגמה:</strong> ככל שהקירוב רחוק יותר, KL גדול יותר
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-4 text-center">
+            <p class="text-sm text-gray-600">קובץ Python: slide10_kl_divergence.py</p>
+            <p class="text-xs text-gray-400 mt-2" style="opacity: 0.6;">© כל הזכויות שמורות לדר. יורם סגל</p>
+        </div>
+    </div>
+
+    <script>
+        // Normal distribution PDF
+        function normalPDF(x, mu, sigma) {
+            return (1 / (sigma * Math.sqrt(2 * Math.PI))) * 
+                   Math.exp(-0.5 * Math.pow((x - mu) / sigma, 2));
+        }
+
+        // Generate x values
+        const xValues = [];
+        for (let x = 0; x <= 10; x += 0.2) {
+            xValues.push(x);
+        }
+
+        // True distribution P (μ=5, σ=1)
+        const pTrue = xValues.map(x => normalPDF(x, 5, 1));
+        const pSum = pTrue.reduce((a, b) => a + b, 0);
+        const pNormalized = pTrue.map(p => p / pSum);
+
+        // Approximation distributions Q
+        const approximations = [
+            { name: 'קירוב טוב', mu: 5, sigma: 1.2, color: '#12377A' },
+            { name: 'קירוב בינוני', mu: 4.5, sigma: 1.5, color: '#DC2626' },
+            { name: 'קירוב גרוע', mu: 3, sigma: 2, color: '#059669' }
+        ];
+
+        // Calculate KL divergence
+        function klDivergence(p, q) {
+            let kl = 0;
+            for (let i = 0; i < p.length; i++) {
+                if (p[i] > 0 && q[i] > 0) {
+                    kl += p[i] * Math.log(p[i] / q[i]);
+                }
+            }
+            return kl;
+        }
+
+        // Calculate cross entropy
+        function crossEntropy(p, q) {
+            let ce = 0;
+            for (let i = 0; i < p.length; i++) {
+                if (p[i] > 0 && q[i] > 0) {
+                    ce -= p[i] * Math.log(q[i]);
+                }
+            }
+            return ce;
+        }
+
+        // Prepare datasets
+        const datasets = [{
+            label: 'התפלגות אמיתית P',
+            data: xValues.map((x, i) => ({ x: x, y: pNormalized[i] })),
+            borderColor: '#000000',
+            backgroundColor: 'transparent',
+            borderWidth: 3,
+            fill: false,
+            tension: 0.4,
+            pointRadius: 0
+        }];
+
+        approximations.forEach((approx, index) => {
+            const qValues = xValues.map(x => normalPDF(x, approx.mu, approx.sigma));
+            const qSum = qValues.reduce((a, b) => a + b, 0);
+            const qNormalized = qValues.map(q => q / qSum);
+            
+            // Calculate metrics
+            const kl = klDivergence(pNormalized, qNormalized);
+            const ce = crossEntropy(pNormalized, qNormalized);
+            
+            // Update display
+            document.getElementById(`kl${index + 1}`).textContent = kl.toFixed(3);
+            if (index === 0) {
+                document.getElementById('ce').textContent = ce.toFixed(2);
+            }
+            
+            datasets.push({
+                label: `${approx.name} (KL=${kl.toFixed(3)})`,
+                data: xValues.map((x, i) => ({ x: x, y: qNormalized[i] })),
+                borderColor: approx.color,
+                backgroundColor: approx.color + '20',
+                borderWidth: 2,
+                fill: false,
+                tension: 0.4,
+                pointRadius: 0
+            });
+        });
+
+        const ctx = document.getElementById('klChart').getContext('2d');
+        
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                datasets: datasets
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            font: {
+                                family: 'Heebo',
+                                size: 10
+                            },
+                            usePointStyle: true
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        type: 'linear',
+                        title: {
+                            display: true,
+                            text: 'ערכים',
+                            font: {
+                                family: 'Heebo',
+                                size: 12
+                            }
+                        },
+                        min: 0,
+                        max: 10
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'צפיפות הסתברות',
+                            font: {
+                                family: 'Heebo',
+                                size: 12
+                            }
+                        }
+                    }
+                },
+                interaction: {
+                    mode: 'index',
+                    intersect: false
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+

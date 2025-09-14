@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מדדי נטייה מרכזית</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-box-and-violin-plot@3.9.0"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            background: #F2F9FC;
+            font-family: 'Heebo', sans-serif;
+            direction: rtl;
+        }
+        .title {
+            color: #12377A;
+            font-size: 36px;
+            font-weight: 700;
+        }
+        .content-text {
+            color: #858481;
+            font-size: 20px;
+            line-height: 1.3;
+        }
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #495057;
+            direction: ltr;
+            text-align: left;
+        }
+        .python-keyword { color: #0000ff; }
+        .python-string { color: #008000; }
+        .python-comment { color: #808080; }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            font-size: 14px;
+        }
+        .stat-item {
+            background: #f8f9fa;
+            padding: 6px;
+            border-radius: 4px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container flex flex-col p-6">
+        <!-- Header -->
+        <div class="mb-4">
+            <h1 class="title">מדדי נטייה מרכזית</h1>
+            <div class="w-16 h-1 bg-blue-600 mt-2"></div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 grid grid-cols-2 gap-6">
+            <!-- Left Side - Text and Code -->
+            <div class="flex flex-col justify-between">
+                <div class="content-text">
+                    <p class="mb-3">
+                        <strong>מדדי נטייה מרכזית</strong> מתארים את מרכז ההתפלגות של הנתונים.
+                    </p>
+                    <ul class="list-disc list-inside space-y-1 mr-4">
+                        <li><strong>ממוצע:</strong> סכום הערכים חלקי מספרם</li>
+                        <li><strong>חציון:</strong> הערך האמצעי כשהנתונים מסודרים</li>
+                        <li><strong>שכיח:</strong> הערך הנפוץ ביותר</li>
+                        <li><strong>רבעונים:</strong> חלוקה ל-4 חלקים שווים</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-700 mb-2">קוד Python:</h3>
+                    <div class="code-block">
+<span class="python-keyword">import</span> numpy <span class="python-keyword">as</span> np
+<span class="python-keyword">from</span> scipy <span class="python-keyword">import</span> stats
+
+<span class="python-comment"># נתונים לדוגמה</span>
+data = np.concatenate([
+    np.random.normal(5, 1, 300),
+    np.random.normal(8, 0.5, 100),
+    np.random.normal(12, 2, 50)
+])
+
+<span class="python-comment"># חישוב מדדים</span>
+mean_val = np.mean(data)
+median_val = np.median(data)
+mode_val = stats.mode(data)[0]
+q1 = np.percentile(data, 25)
+q3 = np.percentile(data, 75)
+
+<span class="python-keyword">print</span>(<span class="python-string">f"ממוצע: {mean_val:.2f}"</span>)
+<span class="python-keyword">print</span>(<span class="python-string">f"חציון: {median_val:.2f}"</span>)
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side - Chart -->
+            <div class="flex flex-col">
+                <div class="bg-white rounded-lg shadow-lg p-4 flex-1">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3 text-center">תרשים קופסה - ניתוח נתונים</h3>
+                    <div style="height: 280px;">
+                        <canvas id="boxPlotChart"></canvas>
+                    </div>
+                    
+                    <!-- Statistics Display -->
+                    <div class="mt-3 stats-grid" id="statsDisplay">
+                        <div class="stat-item"><strong>ממוצע:</strong> <span id="meanValue">6.2</span></div>
+                        <div class="stat-item"><strong>חציון:</strong> <span id="medianValue">5.8</span></div>
+                        <div class="stat-item"><strong>Q1:</strong> <span id="q1Value">4.9</span></div>
+                        <div class="stat-item"><strong>Q3:</strong> <span id="q3Value">6.8</span></div>
+                    </div>
+                </div>
+                
+                <!-- Chart Analysis -->
+                <div class="mt-3 p-3 bg-blue-50 rounded-lg">
+                    <h4 class="font-semibold text-blue-800 mb-1">ניתוח תרשים הקופסה:</h4>
+                    <div class="text-sm text-blue-700">
+                        <strong>קו תחתון:</strong> מינימום | <strong>קופסה:</strong> Q1-Q3 | <strong>קו אמצע:</strong> חציון | <strong>נקודות:</strong> חריגים
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-4 text-center">
+            <p class="text-sm text-gray-600">קובץ Python: slide6_central_tendency.py</p>
+            <p class="text-xs text-gray-400 mt-2" style="opacity: 0.6;">© כל הזכויות שמורות לדר. יורם סגל</p>
+        </div>
+    </div>
+
+    <script>
+        // Generate sample data (skewed distribution)
+        function generateSkewedData() {
+            const data = [];
+            
+            // Normal distribution centered at 5
+            for (let i = 0; i < 300; i++) {
+                data.push(5 + (Math.random() - 0.5) * 2 + (Math.random() - 0.5) * 2);
+            }
+            
+            // Normal distribution centered at 8
+            for (let i = 0; i < 100; i++) {
+                data.push(8 + (Math.random() - 0.5) * 1);
+            }
+            
+            // Normal distribution centered at 12
+            for (let i = 0; i < 50; i++) {
+                data.push(12 + (Math.random() - 0.5) * 4);
+            }
+            
+            return data.sort((a, b) => a - b);
+        }
+
+        function calculateStats(data) {
+            const sorted = [...data].sort((a, b) => a - b);
+            const n = sorted.length;
+            
+            const mean = data.reduce((sum, val) => sum + val, 0) / n;
+            const median = n % 2 === 0 ? 
+                (sorted[n/2 - 1] + sorted[n/2]) / 2 : 
+                sorted[Math.floor(n/2)];
+            
+            const q1 = sorted[Math.floor(n * 0.25)];
+            const q3 = sorted[Math.floor(n * 0.75)];
+            const min = sorted[0];
+            const max = sorted[n - 1];
+            
+            return { mean, median, q1, q3, min, max };
+        }
+
+        const sampleData = generateSkewedData();
+        const stats = calculateStats(sampleData);
+
+        // Update statistics display
+        document.getElementById('meanValue').textContent = stats.mean.toFixed(2);
+        document.getElementById('medianValue').textContent = stats.median.toFixed(2);
+        document.getElementById('q1Value').textContent = stats.q1.toFixed(2);
+        document.getElementById('q3Value').textContent = stats.q3.toFixed(2);
+
+        // Create box plot using scatter chart to simulate box plot
+        const ctx = document.getElementById('boxPlotChart').getContext('2d');
+        
+        // Create histogram for visualization
+        function createHistogram(data, bins = 30) {
+            const min = Math.min(...data);
+            const max = Math.max(...data);
+            const binWidth = (max - min) / bins;
+            const histogram = new Array(bins).fill(0);
+            const labels = [];
+            
+            for (let i = 0; i < bins; i++) {
+                labels.push((min + i * binWidth).toFixed(1));
+            }
+            
+            data.forEach(value => {
+                const binIndex = Math.min(Math.floor((value - min) / binWidth), bins - 1);
+                histogram[binIndex]++;
+            });
+            
+            return { histogram, labels };
+        }
+
+        const { histogram, labels } = createHistogram(sampleData);
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'תדירות',
+                    data: histogram,
+                    backgroundColor: '#12377A',
+                    borderColor: '#0f2d5f',
+                    borderWidth: 1,
+                    borderRadius: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: { font: { family: 'Heebo', size: 12 } }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'תדירות',
+                            font: { family: 'Heebo', size: 12 }
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'ערכים',
+                            font: { family: 'Heebo', size: 12 }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+
