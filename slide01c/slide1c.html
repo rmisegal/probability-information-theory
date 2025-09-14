@@ -55,27 +55,35 @@
             <div class="flex flex-col justify-between">
                 <div class="content-text">
                     <p class="mb-3">
-                        <strong>הסתברות</strong> היא מדד מתמטי למידת הוודאות שאירוע מסוים יתרחש (0-1).
+                        <strong>היסטוגרמה</strong> היא ייצוג גרפי של התפלגות תדירויות הנתונים, המחולקים לקבוצות (bins).
                     </p>
                     <ul class="list-disc list-inside space-y-1 mr-4">
-                        <li>0 = אירוע בלתי אפשרי</li>
-                        <li>1 = אירוע ודאי</li>
-                        <li>0.5 = סיכוי של 50%</li>
+                        <li>גובה העמודה = תדירות התוצאה</li>
+                        <li>רוחב העמודה = טווח הערכים</li>
+                        <li>שטח כולל = מספר התצפיות הכולל</li>
                     </ul>
                 </div>
 
                 <div>
                     <h3 class="text-lg font-semibold text-gray-700 mb-2">קוד Python:</h3>
                     <div class="code-block">
-<span class="python-comment"># הסתברות זריקת קובייה</span>
-outcomes = [<span class="python-string">'1'</span>, <span class="python-string">'2'</span>, <span class="python-string">'3'</span>, <span class="python-string">'4'</span>, <span class="python-string">'5'</span>, <span class="python-string">'6'</span>]
-probability = 1 / len(outcomes)
-<span class="python-keyword">print</span>(<span class="python-string">f"הסתברות: {probability:.3f}"</span>)
+<span class="python-comment"># יצירת היסטוגרמה של 1000 הטלות</span>
+<span class="python-keyword">import</span> matplotlib.pyplot <span class="python-keyword">as</span> plt
+<span class="python-keyword">import</span> numpy <span class="python-keyword">as</span> np
 
-<span class="python-comment"># הסתברות למספר זוגי</span>
-even = [<span class="python-string">'2'</span>, <span class="python-string">'4'</span>, <span class="python-string">'6'</span>]
-prob_even = len(even) / len(outcomes)
-<span class="python-keyword">print</span>(<span class="python-string">f"זוגי: {prob_even:.3f}"</span>)
+<span class="python-comment"># נתוני הסימולציה</span>
+rolls = np.random.randint(1, 7, 1000)
+bins = np.arange(0.5, 7.5, 1)  <span class="python-comment"># 6 bins עבור 1-6</span>
+
+<span class="python-comment"># יצירת היסטוגרמה</span>
+plt.hist(rolls, bins=bins, alpha=0.7, edgecolor='black')
+plt.xlabel(<span class="python-string">'Dice Outcome'</span>)
+plt.ylabel(<span class="python-string">'Frequency'</span>)
+plt.title(<span class="python-string">'Histogram of 1000 Dice Rolls'</span>)
+
+<span class="python-comment"># הוספת קו תיאורטי</span>
+expected = 1000/6  <span class="python-comment"># ~166.67</span>
+plt.axhline(y=expected, color='red', linestyle='--')
                     </div>
                 </div>
             </div>

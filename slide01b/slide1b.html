@@ -55,27 +55,32 @@
             <div class="flex flex-col justify-between">
                 <div class="content-text">
                     <p class="mb-3">
-                        <strong>הסתברות</strong> היא מדד מתמטי למידת הוודאות שאירוע מסוים יתרחש (0-1).
+                        <strong>חוק המספרים הגדולים</strong> קובע שככל שמספר הניסויים גדל, התדירות האמפירית מתקרבת להסתברות התיאורטית.
                     </p>
                     <ul class="list-disc list-inside space-y-1 mr-4">
-                        <li>0 = אירוע בלתי אפשרי</li>
-                        <li>1 = אירוע ודאי</li>
-                        <li>0.5 = סיכוי של 50%</li>
+                        <li>דגימות קטנות: סטיות גדולות מהתיאוריה</li>
+                        <li>דגימות גדולות: התקרבות לערכים התיאורטיים</li>
+                        <li>בסיס להסקה סטטיסטית</li>
                     </ul>
                 </div>
 
                 <div>
                     <h3 class="text-lg font-semibold text-gray-700 mb-2">קוד Python:</h3>
                     <div class="code-block">
-<span class="python-comment"># הסתברות זריקת קובייה</span>
-outcomes = [<span class="python-string">'1'</span>, <span class="python-string">'2'</span>, <span class="python-string">'3'</span>, <span class="python-string">'4'</span>, <span class="python-string">'5'</span>, <span class="python-string">'6'</span>]
-probability = 1 / len(outcomes)
-<span class="python-keyword">print</span>(<span class="python-string">f"הסתברות: {probability:.3f}"</span>)
+<span class="python-comment"># סימולציה של 1000 הטלות קובייה</span>
+<span class="python-keyword">import</span> numpy <span class="python-keyword">as</span> np
+np.random.seed(42)
+rolls = np.random.randint(1, 7, 1000)
 
-<span class="python-comment"># הסתברות למספר זוגי</span>
-even = [<span class="python-string">'2'</span>, <span class="python-string">'4'</span>, <span class="python-string">'6'</span>]
-prob_even = len(even) / len(outcomes)
-<span class="python-keyword">print</span>(<span class="python-string">f"זוגי: {prob_even:.3f}"</span>)
+<span class="python-comment"># חישוב תדירויות</span>
+unique, counts = np.unique(rolls, return_counts=True)
+frequencies = counts / 1000
+
+<span class="python-comment"># השוואה לתיאוריה</span>
+theoretical = 1/6
+<span class="python-keyword">for</span> outcome, freq <span class="python-keyword">in</span> zip(unique, frequencies):
+    diff = freq - theoretical
+    <span class="python-keyword">print</span>(<span class="python-string">f"{outcome}: {freq:.3f} (diff: {diff:+.3f})"</span>)
                     </div>
                 </div>
             </div>
