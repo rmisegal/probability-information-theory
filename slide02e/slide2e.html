@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>פונקציית התפלגות מצטברת (CDF)</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            background: #F2F9FC;
+            font-family: 'Heebo', sans-serif;
+            direction: rtl;
+        }
+        .title {
+            color: #12377A;
+            font-size: 36px;
+            font-weight: 700;
+        }
+        .content-text {
+            color: #858481;
+            font-size: 17px;
+            line-height: 1.3;
+        }
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            color: #495057;
+            direction: ltr;
+            text-align: left;
+        }
+        .python-keyword { color: #0000ff; }
+        .python-string { color: #008000; }
+        .python-comment { color: #808080; }
+        .formula-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 8px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container flex flex-col p-6">
+        <!-- Header -->
+        <div class="mb-4">
+            <h1 class="title">שקף 2ה: פונקציית התפלגות מצטברת (CDF)</h1>
+            <div class="w-16 h-1 bg-blue-600 mt-2"></div>
+        </div>
+
+        <!-- Content -->
+        <div class="flex-1 flex gap-6">
+            <!-- Left Side - Content -->
+            <div class="w-1/2 space-y-3">
+                <div>
+                    <h2 class="text-xl font-semibold text-gray-700 mb-2">מה זה CDF?</h2>
+                    <ul class="content-text space-y-1">
+                        <li><strong>CDF:</strong> Cumulative Distribution Function</li>
+                        <li><strong>הגדרה:</strong> F(x) = P(X ≤ x)</li>
+                        <li><strong>משמעות:</strong> הסתברות שהמשתנה ≤ ערך מסוים</li>
+                        <li><strong>טווח:</strong> 0 ≤ F(x) ≤ 1</li>
+                        <li><strong>מונוטונית עולה:</strong> אף פעם לא יורדת</li>
+                    </ul>
+                </div>
+
+                <div class="formula-box">
+                    <h3 class="text-lg font-bold text-yellow-800 mb-2">נוסחת CDF להתפלגות אחידה:</h3>
+                    <div class="text-lg font-mono">
+                        F(x) = (x - a) / (b - a)<br>
+                        <span class="text-sm">עבור a ≤ x ≤ b</span><br>
+                        <span class="text-sm">עבור [0,10]: F(x) = x/10</span>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-700 mb-2">תכונות CDF:</h3>
+                    <ul class="content-text space-y-1">
+                        <li><strong>F(0) = 0:</strong> התחלה מאפס</li>
+                        <li><strong>F(10) = 1:</strong> סיום באחד</li>
+                        <li><strong>קו ישר:</strong> עלייה קבועה בהתפלגות אחידה</li>
+                        <li><strong>שיפוע:</strong> 1/(b-a) = 1/10 = 0.1</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-700 mb-2">קוד Python:</h3>
+                    <div class="code-block">
+<span class="python-comment"># יצירת CDF להתפלגות אחידה</span>
+<span class="python-keyword">import</span> matplotlib.pyplot <span class="python-keyword">as</span> plt
+<span class="python-keyword">import</span> numpy <span class="python-keyword">as</span> np
+<span class="python-keyword">from</span> scipy <span class="python-keyword">import</span> stats
+
+<span class="python-comment"># יצירת נתונים אחידים</span>
+np.random.seed(42)
+uniform_data = np.random.uniform(0, 10, 1000)
+
+<span class="python-comment"># יצירת CDF תיאורטי</span>
+x_theoretical = np.linspace(0, 10, 100)
+cdf_theoretical = x_theoretical / 10  <span class="python-comment"># F(x) = x/10</span>
+
+<span class="python-comment"># יצירת CDF אמפירי</span>
+x_empirical = np.sort(uniform_data)
+y_empirical = np.arange(1, len(x_empirical) + 1) / len(x_empirical)
+
+<span class="python-comment"># יצירת הגרף</span>
+plt.figure(figsize=(10, 6))
+plt.plot(x_theoretical, cdf_theoretical, 'r-', 
+         linewidth=2, label='Theoretical CDF')
+plt.plot(x_empirical, y_empirical, 'b-', 
+         alpha=0.7, label='Empirical CDF')
+
+plt.xlabel(<span class="python-string">'x'</span>)
+plt.ylabel(<span class="python-string">'F(x) = P(X ≤ x)'</span>)
+plt.title(<span class="python-string">'CDF: Uniform Distribution [0,10]'</span>)
+plt.legend()
+plt.grid(True, alpha=0.3)
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side - Chart -->
+            <div class="w-1/2">
+                <div class="bg-white rounded-lg shadow-lg p-4 h-full">
+                    <h3 class="text-lg font-semibold text-center mb-4">CDF: התפלגות אחידה [0,10]</h3>
+                    <div style="height: 400px;">
+                        <canvas id="cdfChart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- Chart Analysis -->
+                <div class="p-3 bg-blue-50 rounded-lg mt-2">
+                    <h4 class="font-semibold text-blue-800 mb-1">ניתוח הגרף:</h4>
+                    <div class="text-sm text-blue-700">
+                        <strong>ציר X:</strong> ערכים (0-10) | <strong>ציר Y:</strong> הסתברות מצטברת (0-1)<br>
+                        <strong>קו אדום:</strong> CDF תיאורטי | <strong>קו כחול:</strong> CDF אמפירי | <strong>מסקנה:</strong> קו ישר = התפלגות אחידה
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-4 text-center">
+            <p class="text-sm text-gray-500">קובץ Python: slide02e_main.py</p>
+            <p class="text-xs text-gray-400 mt-1">כל הזכויות שמורות לדר. יורם סגל</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('cdfChart').getContext('2d');
+            
+            // Generate theoretical CDF data
+            const theoreticalData = [];
+            for(let x = 0; x <= 10; x += 0.1) {
+                theoreticalData.push({
+                    x: x,
+                    y: x / 10  // F(x) = x/10 for uniform [0,10]
+                });
+            }
+            
+            // Generate empirical CDF data
+            const uniformData = [];
+            for(let i = 0; i < 1000; i++) {
+                uniformData.push(Math.random() * 10);
+            }
+            uniformData.sort((a, b) => a - b);
+            
+            const empiricalData = [];
+            for(let i = 0; i < uniformData.length; i++) {
+                empiricalData.push({
+                    x: uniformData[i],
+                    y: (i + 1) / uniformData.length
+                });
+            }
+            
+            const chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    datasets: [{
+                        label: 'Theoretical CDF',
+                        data: theoreticalData,
+                        borderColor: 'red',
+                        backgroundColor: 'transparent',
+                        borderWidth: 3,
+                        pointRadius: 0,
+                        fill: false
+                    }, {
+                        label: 'Empirical CDF',
+                        data: empiricalData,
+                        borderColor: 'blue',
+                        backgroundColor: 'transparent',
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                font: {
+                                    family: 'Heebo',
+                                    size: 12
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            type: 'linear',
+                            position: 'bottom',
+                            title: {
+                                display: true,
+                                text: 'x',
+                                font: {
+                                    family: 'Heebo',
+                                    size: 14
+                                }
+                            },
+                            min: 0,
+                            max: 10,
+                            ticks: {
+                                font: {
+                                    family: 'Heebo',
+                                    size: 12
+                                }
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'F(x) = P(X ≤ x)',
+                                font: {
+                                    family: 'Heebo',
+                                    size: 14
+                                }
+                            },
+                            min: 0,
+                            max: 1,
+                            ticks: {
+                                font: {
+                                    family: 'Heebo',
+                                    size: 12
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+

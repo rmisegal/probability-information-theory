@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>היסטוגרמה של התפלגות אחידה</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            background: #F2F9FC;
+            font-family: 'Heebo', sans-serif;
+            direction: rtl;
+        }
+        .title {
+            color: #12377A;
+            font-size: 36px;
+            font-weight: 700;
+        }
+        .content-text {
+            color: #858481;
+            font-size: 20px;
+            line-height: 1.3;
+        }
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #495057;
+            direction: ltr;
+            text-align: left;
+        }
+        .python-keyword { color: #0000ff; }
+        .python-string { color: #008000; }
+        .python-comment { color: #808080; }
+    </style>
+</head>
+<body>
+    <div class="slide-container flex flex-col p-6">
+        <!-- Header -->
+        <div class="mb-4">
+            <h1 class="title">שקף 2ב: היסטוגרמה של התפלגות אחידה</h1>
+            <div class="w-16 h-1 bg-blue-600 mt-2"></div>
+        </div>
+
+        <!-- Content -->
+        <div class="flex-1 flex gap-6">
+            <!-- Left Side - Content -->
+            <div class="w-1/2 space-y-4">
+                <div>
+                    <h2 class="text-xl font-semibold text-gray-700 mb-2">מושגי היסטוגרמה בהתפלגות אחידה:</h2>
+                    <ul class="content-text space-y-1">
+                        <li><strong>היסטוגרמה:</strong> ייצוג גרפי של התפלגות הנתונים</li>
+                        <li><strong>Bins:</strong> מספר הקבוצות שמחלקות את הטווח</li>
+                        <li><strong>התפלגות אחידה:</strong> כל הערכים בטווח שווים בהסתברות</li>
+                        <li><strong>גובה עמודות:</strong> אמור להיות דומה בהתפלגות אחידה</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-700 mb-2">קוד Python:</h3>
+                    <div class="code-block">
+<span class="python-comment"># יצירת היסטוגרמה של התפלגות אחידה</span>
+<span class="python-keyword">import</span> matplotlib.pyplot <span class="python-keyword">as</span> plt
+<span class="python-keyword">import</span> numpy <span class="python-keyword">as</span> np
+
+<span class="python-comment"># יצירת נתונים אחידים</span>
+np.random.seed(42)
+uniform_data = np.random.uniform(0, 10, 1000)
+
+<span class="python-comment"># יצירת היסטוגרמה</span>
+counts, bins, patches = plt.hist(uniform_data, 
+                                bins=20, alpha=0.7, 
+                                edgecolor='black')
+
+<span class="python-comment"># הוספת תוויות נתונים</span>
+<span class="python-keyword">for</span> i, count <span class="python-keyword">in</span> enumerate(counts):
+    plt.text(bins[i] + (bins[1]-bins[0])/2, 
+             count + 1, str(int(count)), 
+             ha=<span class="python-string">'center'</span>, fontsize=8)
+
+plt.xlabel(<span class="python-string">'Value'</span>)
+plt.ylabel(<span class="python-string">'Frequency'</span>)
+plt.title(<span class="python-string">'Histogram of Uniform Distribution'</span>)
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side - Chart -->
+            <div class="w-1/2">
+                <div class="bg-white rounded-lg shadow-lg p-4 h-full">
+                    <h3 class="text-lg font-semibold text-center mb-4">היסטוגרמה של התפלגות אחידה (1000 דגימות)</h3>
+                    <div style="height: 400px;">
+                        <canvas id="uniformChart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- Chart Analysis -->
+                <div class="p-3 bg-blue-50 rounded-lg mt-2">
+                    <h4 class="font-semibold text-blue-800 mb-1">ניתוח הגרף:</h4>
+                    <div class="text-sm text-blue-700">
+                        <strong>ציר X:</strong> ערכים (0-10) | <strong>ציר Y:</strong> תדירות<br>
+                        <strong>תוויות:</strong> מספר הדגימות בכל bin | <strong>מסקנה:</strong> גובה עמודות דומה = התפלגות אחידה
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-4 text-center">
+            <p class="text-sm text-gray-500">קובץ Python: slide02b_main.py</p>
+            <p class="text-xs text-gray-400 mt-1">כל הזכויות שמורות לדר. יורם סגל</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('uniformChart').getContext('2d');
+            
+            // Generate uniform data for histogram
+            const uniformData = [];
+            for(let i = 0; i < 1000; i++) {
+                uniformData.push(Math.random() * 10);
+            }
+            
+            // Create bins and count frequencies
+            const bins = 20;
+            const binWidth = 10 / bins;
+            const binCounts = new Array(bins).fill(0);
+            const binLabels = [];
+            
+            for(let i = 0; i < bins; i++) {
+                binLabels.push((i * binWidth).toFixed(1) + '-' + ((i + 1) * binWidth).toFixed(1));
+            }
+            
+            uniformData.forEach(value => {
+                const binIndex = Math.min(Math.floor(value / binWidth), bins - 1);
+                binCounts[binIndex]++;
+            });
+            
+            const chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: binLabels,
+                    datasets: [{
+                        label: 'תדירות',
+                        data: binCounts,
+                        backgroundColor: '#4ecdc4',
+                        borderColor: '#45b7aa',
+                        borderWidth: 1,
+                        borderRadius: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        datalabels: {
+                            display: true,
+                            anchor: 'end',
+                            align: 'top',
+                            font: {
+                                family: 'Heebo',
+                                size: 10,
+                                weight: 'bold'
+                            },
+                            color: '#333',
+                            formatter: function(value) {
+                                return value;
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'תדירות',
+                                font: {
+                                    family: 'Heebo',
+                                    size: 14
+                                }
+                            },
+                            ticks: {
+                                font: {
+                                    family: 'Heebo',
+                                    size: 12
+                                }
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'טווח ערכים',
+                                font: {
+                                    family: 'Heebo',
+                                    size: 14
+                                }
+                            },
+                            ticks: {
+                                font: {
+                                    family: 'Heebo',
+                                    size: 10
+                                },
+                                maxRotation: 45
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+

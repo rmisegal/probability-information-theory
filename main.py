@@ -51,7 +51,7 @@ def import_slide_module(slide_number):
     """Import slide module by number"""
     try:
         # Handle special cases for split slides
-        if slide_number in ["1a", "1b", "1c"]:
+        if slide_number in ["1a", "1b", "1c", "2a", "2b", "2c", "2d", "2e"]:
             slide_dir = f"slide0{slide_number}"
             module_name = f"{slide_dir}.{slide_dir}_main"
         else:
@@ -114,7 +114,11 @@ def list_slides():
         ("1a", "Basic Probability Concepts"),
         ("1b", "Frequencies from Simulation"),
         ("1c", "Histogram of 1000 Rolls"),
-        (2, "Uniform Distribution"),
+        ("2a", "Uniform Distribution - Basic Concepts"),
+        ("2b", "Histogram of Uniform Distribution"),
+        ("2c", "Q-Q Plot - Uniform Distribution Test"),
+        ("2d", "Box Plot - How to Read Box Plots"),
+        ("2e", "Cumulative Distribution Function (CDF)"),
         (3, "Normal Distribution"),
         (4, "Binomial Distribution"),
         (5, "Poisson Distribution"),
@@ -221,8 +225,8 @@ Usage Examples:
     
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument('--slide', '-s', type=str, 
-                      choices=['1a', '1b', '1c', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
-                      help='Slide number to run (1a, 1b, 1c, 2-10)')
+                      choices=['1a', '1b', '1c', '2a', '2b', '2c', '2d', '2e', '3', '4', '5', '6', '7', '8', '9', '10'],
+                      help='Slide number to run (1a-1c, 2a-2e, 3-10)')
     group.add_argument('--all', '-a', action='store_true',
                       help='Run all slides')
     group.add_argument('--list', '-l', action='store_true',
