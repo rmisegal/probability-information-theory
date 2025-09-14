@@ -13,6 +13,10 @@ from datetime import datetime
 from pathlib import Path
 import warnings
 
+# Suppress matplotlib GUI windows during tests
+import matplotlib
+matplotlib.use('Agg')  # Use non-interactive backend to prevent window opening
+
 # Suppress matplotlib warnings in tests
 warnings.filterwarnings("ignore", category=DeprecationWarning, module="matplotlib")
 warnings.filterwarnings("ignore", category=UserWarning, module="matplotlib")

@@ -138,7 +138,9 @@ class TestMainAdvanced(unittest.TestCase):
         stdout, stderr, returncode = run_module_with_capture(self.main_path, ["--slide", "1"])
         
         expected_patterns = [
-            "Running Slide 1: Introduction to Probability",
+            "Running slide 1",
+            "Opening HTML slide 1...",
+            "Slide opened in browser:",
             "=== Dice Probability Calculations ===",
             "Slide 1 completed successfully"
         ]

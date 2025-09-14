@@ -67,15 +67,27 @@ def run_slide(slide_number):
     print("=" * 50)
     
     module = import_slide_module(slide_number)
-    if module and hasattr(module, 'main'):
+    if module:
         try:
-            module.main()
+            # First try to show the HTML slide
+            if hasattr(module, 'show_slide'):
+                print(f"Opening HTML slide {slide_number}...")
+                module.show_slide()
+            
+            # Then run the main demonstration
+            if hasattr(module, 'main'):
+                module.main()
+            else:
+                print(f"No main function found for slide {slide_number}")
+                
             print(f"\nSlide {slide_number} completed successfully!")
             print("If graph windows are still open, please close them to continue.")
         except Exception as e:
             print(f"Error running slide {slide_number}: {e}")
+            import traceback
+            traceback.print_exc()
     else:
-        print(f"Module or main function not found for slide {slide_number}")
+        print(f"Module not found for slide {slide_number}")
 
 def run_all_slides():
     """Run all slides"""
@@ -127,7 +139,8 @@ def run_tests():
             "tests/test_slide02.py", 
             "tests/test_slide01_advanced.py",
             "tests/test_main_advanced.py",
-            "tests/test_all_slides_advanced.py"
+            "tests/test_all_slides_advanced.py",
+            "tests/test_all_slides_complete.py"
         ]
         
         all_passed = True
