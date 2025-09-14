@@ -138,15 +138,181 @@ pip list
 המערכת כוללת טסטים מתקדמים עם בדיקת פלט ויצירת לוגי שגיאות:
 
 ```bash
-# הרצת כל הטסטים (כולל מתקדמים)
+# הרצת כל הטסטים (כולל מתקדמים) - מומלץ!
 python main.py --test
 ```
 
-**מה יקרה:**
-- הרצת 5 סוגי טסטים שונים
-- בדיקת פלט למסך מול דפוסים צפויים
-- זיהוי אזהרות פונט ושגיאות
-- בדיקת ביצועים ומבנה פרויקט
+#### **🎯 בדיקת כל השקפים (1-10):**
+
+```bash
+# בדיקה מהירה שכל השקפים עובדים
+python -m pytest tests/test_all_slides_complete.py -v
+
+# בדיקה ספציפית שאין אזהרות פונט בשום שקף
+python -m pytest tests/test_all_slides_complete.py::TestAllSlidesComplete::test_all_slides_no_font_warnings -v
+
+# בדיקה שכל קבצי Python קיימים
+python -m pytest tests/test_all_slides_complete.py::TestAllSlidesComplete::test_all_python_files_exist -v
+
+# בדיקה שכל קבצי HTML קיימים  
+python -m pytest tests/test_all_slides_complete.py::TestAllSlidesComplete::test_all_html_files_exist -v
+```
+
+#### **📋 בדיקת שקפים בודדים:**
+
+```bash
+# בדיקת שקף ספציפי (1-10)
+python main.py --slide 1
+python main.py --slide 5
+python main.py --slide 10
+
+# בדיקת טסט לשקף ספציפי
+python -m pytest tests/test_all_slides_complete.py::TestAllSlidesComplete::test_slide_03_execution -v
+```
+
+#### **🔍 סוגי טסטים שונים:**
+
+```bash
+# טסטים בסיסיים (מהירים)
+python -m pytest tests/test_slide01.py tests/test_slide02.py -v
+
+# טסטים מתקדמים (עם בדיקת פלט)
+python -m pytest tests/test_slide01_advanced.py -v
+
+# טסטי התוכנית הראשית
+python -m pytest tests/test_main_advanced.py -v
+
+# טסטים כוללים (כל המערכת)
+python -m pytest tests/test_all_slides_advanced.py -v
+
+# טסטים מקיפים (כל 10 השקפים)
+python -m pytest tests/test_all_slides_complete.py -v
+```
+
+#### **⚡ הרצה מהירה של כל השקפים:**
+
+```bash
+# הרצת כל השקפים ברצף (ללא טסטים)
+python main.py --all
+
+# רשימת כל השקפים הזמינים
+python main.py --list
+```
+
+#### **📊 תוצאות צפויות מטסטים:**
+
+**כשהכל עובד תקין:**
+```
+Running tests/test_all_slides_complete.py...
+✅ tests/test_all_slides_complete.py - PASSED
+
+Running tests/test_slide01_advanced.py...
+✅ tests/test_slide01_advanced.py - PASSED
+
+Running tests/test_main_advanced.py...
+✅ tests/test_main_advanced.py - PASSED
+
+🎉 All tests passed successfully!
+```
+
+**דוגמה לטסט שקף בודד:**
+```bash
+python main.py --slide 3
+```
+**פלט צפוי:**
+```
+======================================================================
+Probability & Information Theory Project
+Version: 1.0.0
+Build Date: 2025-09-14
+Current Time (Jerusalem): 2025-09-14 09:45:23 IDT
+Based on: Jon Krohn's Machine Learning Foundations series
+Lecturer: Dr. Yoram Segal
+======================================================================
+Running slide 3...
+==================================================
+NOTE: Graphs will open in separate windows.
+      Close graph windows to continue execution.
+==================================================
+Opening HTML slide 3...
+Slide opened in browser: /path/to/slide03/slide3.html
+Slide 3: Normal Distribution
+Lecturer: Dr. Yoram Segal
+==================================================
+=== Generating 1000 samples from Normal Distribution N(0, 1) ===
+Theoretical mean: 0.000
+Empirical mean: 0.023
+Theoretical std: 1.000
+Empirical std: 0.987
+...
+Slide 3 demonstration completed
+Slide 3 completed successfully!
+```
+
+#### **🎯 בדיקה מהירה שהכל עובד:**
+
+```bash
+# בדיקה של 30 שניות שהכל תקין
+python -m pytest tests/test_all_slides_complete.py::TestAllSlidesComplete::test_all_python_files_exist tests/test_all_slides_complete.py::TestAllSlidesComplete::test_all_html_files_exist -v
+```
+
+**אמור להציג:**
+```
+test_all_python_files_exist PASSED ✅
+test_all_html_files_exist PASSED ✅
+2 passed in 0.45s
+```
+#### **🔧 בדיקת בעיות ספציפיות:**
+
+```bash
+# בדיקה שאין אזהרות פונט (הבעיה הכי נפוצה)
+python -m pytest tests/test_all_slides_complete.py::TestAllSlidesComplete::test_all_slides_no_font_warnings -v
+
+# בדיקה שכל השקפים מתבצעים ללא שגיאות
+python -m pytest tests/test_all_slides_complete.py::TestAllSlidesComplete::test_slide_01_execution tests/test_all_slides_complete.py::TestAllSlidesComplete::test_slide_05_execution tests/test_all_slides_complete.py::TestAllSlidesComplete::test_slide_10_execution -v
+
+# בדיקה שהתוכנית הראשית עובדת
+python -m pytest tests/test_main_advanced.py::TestMainAdvanced::test_main_list_command -v
+
+# בדיקה מלאה של מערכת הטסטים
+python -m pytest tests/ -v --tb=short
+```
+
+#### **📋 רשימת כל הטסטים הזמינים:**
+
+```bash
+# הצגת כל הטסטים ללא הרצה
+python -m pytest tests/ --collect-only
+
+# הרצת טסטים עם פירוט מלא
+python -m pytest tests/ -v -s
+
+# הרצת טסטים עם זמני ביצוע
+python -m pytest tests/ -v --durations=10
+```
+
+#### **⚠️ אם יש שגיאות:**
+
+1. **בדוק קבצי LOG_ERROR:**
+```bash
+# Windows
+type tests\logs\LOG_ERROR_*.json
+
+# Linux/Mac  
+cat tests/logs/LOG_ERROR_*.json
+```
+
+2. **הרץ טסט בודד עם פירוט:**
+```bash
+python -m pytest tests/test_all_slides_complete.py::TestAllSlidesComplete::test_slide_03_execution -v -s
+```
+
+3. **בדוק שהסביבה הוירטואלית פעילה:**
+```bash
+# אמור להציג (venv) בתחילת השורה
+echo $VIRTUAL_ENV  # Linux/Mac
+echo %VIRTUAL_ENV%  # Windows
+```
 - יצירת קבצי LOG_ERROR אם יש בעיות
 
 **פלט צפוי בהצלחה:**
