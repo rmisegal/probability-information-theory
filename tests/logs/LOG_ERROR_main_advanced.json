@@ -1,0 +1,21 @@
+{
+  "timestamp": "2025-09-14T02:07:16.403383",
+  "test_name": "main_advanced",
+  "error_type": "MAIN_TEST_FAILED",
+  "expected": [
+    "Running tests...",
+    "test session starts",
+    "passed"
+  ],
+  "actual": "TIMEOUT: Process took longer than 30 seconds",
+  "additional_info": {
+    "errors": [
+      "MISSING: Expected 'Running tests...' not found in output",
+      "MISSING: Expected 'test session starts' not found in output",
+      "MISSING: Expected 'passed' not found in output"
+    ],
+    "return_code": 1,
+    "stdout": "",
+    "stderr": "TIMEOUT: Process took longer than 30 seconds"
+  }
+}

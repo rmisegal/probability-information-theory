@@ -111,15 +111,67 @@ def list_slides():
         print(f"{num:2d}. {title}")
 
 def run_tests():
-    """Run all tests"""
+    """Run all tests including advanced output validation tests"""
     print("Running tests...")
     print("NOTE: Tests may open graph windows briefly.")
     print("      These will close automatically.")
+    print("      Advanced tests include output validation and error logging.")
     print("-" * 50)
     
     import subprocess
     
     try:
+        # Run all test files including advanced ones
+        test_files = [
+            "tests/test_slide01.py",
+            "tests/test_slide02.py", 
+            "tests/test_slide01_advanced.py",
+            "tests/test_main_advanced.py",
+            "tests/test_all_slides_advanced.py"
+        ]
+        
+        all_passed = True
+        
+        for test_file in test_files:
+            if Path(test_file).exists():
+                print(f"\nRunning {test_file}...")
+                result = subprocess.run([
+                    sys.executable, "-m", "pytest", test_file, "-v", "--tb=short"
+                ], capture_output=True, text=True, cwd=project_root)
+                
+                if result.returncode == 0:
+                    print(f"✅ {test_file} - PASSED")
+                else:
+                    print(f"❌ {test_file} - FAILED")
+                    print("STDOUT:", result.stdout[-500:])  # Last 500 chars
+                    if result.stderr:
+                        print("STDERR:", result.stderr[-500:])
+                    all_passed = False
+            else:
+                print(f"⚠️  {test_file} - NOT FOUND")
+        
+        # Check for error logs
+        logs_dir = Path("tests/logs")
+        if logs_dir.exists():
+            error_logs = list(logs_dir.glob("LOG_ERROR_*.json"))
+            if error_logs:
+                print(f"\n⚠️  Found {len(error_logs)} error log(s):")
+                for log_file in error_logs:
+                    print(f"   - {log_file}")
+                print("   Check these files for detailed error information.")
+        
+        if all_passed:
+            print("\n🎉 All tests passed successfully!")
+        else:
+            print("\n❌ Some tests failed. Check error logs for details.")
+            
+        return all_passed
+        
+    except Exception as e:
+        print(f"Error running advanced tests: {e}")
+        print("Falling back to basic test run...")
+        
+        # Fallback to basic pytest
         result = subprocess.run([
             sys.executable, "-m", "pytest", "tests/", "-v", "--tb=short"
         ], capture_output=True, text=True, cwd=project_root)
@@ -131,9 +183,6 @@ def run_tests():
             print(result.stderr)
         
         return result.returncode == 0
-    except Exception as e:
-        print(f"Error running tests: {e}")
-        return False
 
 def main():
     """Main function"""

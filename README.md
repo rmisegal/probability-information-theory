@@ -133,14 +133,106 @@ pip list
 
 ### 💻 שימוש
 
-#### **🧪 שלב 4: הרצת בדיקות**
+##### **🧪 הרצת טסטים מתקדמים:**
+
+המערכת כוללת טסטים מתקדמים עם בדיקת פלט ויצירת לוגי שגיאות:
 
 ```bash
-# הרצת כל הטסטים
+# הרצת כל הטסטים (כולל מתקדמים)
 python main.py --test
+```
 
-# או באמצעות pytest ישירות
-python -m pytest tests/ -v
+**מה יקרה:**
+- הרצת 5 סוגי טסטים שונים
+- בדיקת פלט למסך מול דפוסים צפויים
+- זיהוי אזהרות פונט ושגיאות
+- בדיקת ביצועים ומבנה פרויקט
+- יצירת קבצי LOG_ERROR אם יש בעיות
+
+**פלט צפוי בהצלחה:**
+```
+Running tests...
+NOTE: Tests may open graph windows briefly.
+      These will close automatically.
+      Advanced tests include output validation and error logging.
+--------------------------------------------------
+
+Running tests/test_slide01.py...
+✅ tests/test_slide01.py - PASSED
+
+Running tests/test_slide02.py...
+✅ tests/test_slide02.py - PASSED
+
+Running tests/test_slide01_advanced.py...
+✅ tests/test_slide01_advanced.py - PASSED
+
+Running tests/test_main_advanced.py...
+✅ tests/test_main_advanced.py - PASSED
+
+Running tests/test_all_slides_advanced.py...
+✅ tests/test_all_slides_advanced.py - PASSED
+
+🎉 All tests passed successfully!
+```
+
+#### **🚨 אם יש שגיאות:**
+
+**פלט כשיש בעיה:**
+```
+❌ tests/test_slide01_advanced.py - FAILED
+⚠️  Found 2 error log(s):
+   - tests/logs/LOG_ERROR_slide01_advanced.json
+   - tests/logs/LOG_ERROR_main_advanced.json
+   Check these files for detailed error information.
+
+❌ Some tests failed. Check error logs for details.
+```
+
+**מה לעשות:**
+1. **בדוק קבצי השגיאות:**
+   ```bash
+   # צפה בקובץ השגיאה
+   type tests\logs\LOG_ERROR_slide01_advanced.json
+   ```
+
+2. **דוגמה לקובץ שגיאה:**
+   ```json
+   {
+     "timestamp": "2025-09-14T09:00:54",
+     "test_name": "slide01_advanced",
+     "error_type": "FONT_WARNINGS_DETECTED",
+     "expected": "No font warnings",
+     "actual": "findfont: Font family 'Arial' not found",
+     "additional_info": {
+       "warnings_found": ["findfont: Font family", "Arial"]
+     }
+   }
+   ```
+
+3. **פתרון בעיות נפוצות:**
+   - **FONT_WARNINGS_DETECTED** - עדכן לגרסה חדשה: `git pull origin main`
+   - **OUTPUT_VALIDATION_FAILED** - בדוק שהקוד רץ תקין
+   - **HTML_SLIDE_FUNCTION_FAILED** - ודא שקבצי HTML קיימים
+   - **PERFORMANCE_SLOW** - סגור תוכניות אחרות
+
+#### **🔍 טסטים ספציפיים:**
+
+```bash
+# הרץ רק טסטים בסיסיים
+python -m pytest tests/test_slide01.py tests/test_slide02.py -v
+
+# הרץ רק טסטים מתקדמים
+python -m pytest tests/test_slide01_advanced.py -v
+
+# הרץ טסט ספציפי
+python -m pytest tests/test_main_advanced.py::TestMainAdvanced::test_main_list_command -v
+```
+
+##### **📋 הרצת שקף ספציפי:**
+
+```bash
+# הרצת שקף בודד
+python main.py --slide 1
 
 # הרצת טסט ספציפי
 python -m pytest tests/test_slide01.py -v
@@ -329,6 +421,73 @@ kill -9 <PID>   # עצירה כפויה (Linux/Mac)
 - **חלונות יפתחו ויסגרו מהר** - זה נורמלי
 - **אם חלון נשאר פתוח** - סגרו אותו ידנית
 - **הטסטים ימשיכו אוטומטית** - לאחר סגירת החלונות
+
+## 🧪 מערכת טסטים מתקדמת
+
+### **📁 מבנה הטסטים:**
+```
+tests/
+├── __init__.py
+├── test_utils.py              # כלי עזר לטסטים
+├── test_slide01.py            # טסטים בסיסיים לשקף 1
+├── test_slide02.py            # טסטים בסיסיים לשקף 2
+├── test_slide01_advanced.py   # טסטים מתקדמים לשקף 1
+├── test_main_advanced.py      # טסטים לתוכנית הראשית
+├── test_all_slides_advanced.py # טסטים כוללים
+└── logs/                      # קבצי שגיאות (נוצרים אוטומטית)
+    ├── LOG_ERROR_*.json       # קבצי שגיאות מפורטים
+    └── TEST_SUMMARY.json      # סיכום טסטים
+```
+
+### **🔍 סוגי טסטים:**
+
+1. **טסטים בסיסיים** - בדיקת פונקציונליות בסיסית
+2. **טסטים מתקדמים** - בדיקת פלט למסך ואזהרות
+3. **טסטי ביצועים** - זמני ריצה
+4. **טסטי מבנה** - קיום קבצים נדרושים
+5. **טסטי אינטגרציה** - בדיקת המערכת כולה
+
+### **📊 מה הטסטים בודקים:**
+
+#### **✅ בדיקות שעוברות:**
+- פונקציות מחזירות תוצאות נכונות
+- גרפים נשמרים בקבצים
+- אין אזהרות פונט
+- פלט למסך תואם לצפוי
+- זמני ריצה סבירים
+- קבצי HTML קיימים
+
+#### **❌ בדיקות שיכולות להיכשל:**
+- אזהרות matplotlib
+- קבצים חסרים
+- פלט לא צפוי למסך
+- שגיאות בקוד
+- ביצועים איטיים
+- בעיות בפתיחת דפדפן
+
+### **🚨 קבצי LOG_ERROR:**
+
+כשטסט נכשל, נוצר קובץ JSON מפורט:
+
+```json
+{
+  "timestamp": "2025-09-14T09:00:54",
+  "test_name": "slide01_advanced", 
+  "error_type": "FONT_WARNINGS_DETECTED",
+  "expected": "No font warnings",
+  "actual": "findfont: Font family 'Arial' not found",
+  "additional_info": {
+    "warnings_found": ["findfont: Font family", "Arial"]
+  }
+}
+```
+
+**סוגי שגיאות נפוצים:**
+- `OUTPUT_VALIDATION_FAILED` - פלט לא תואם לצפוי
+- `FONT_WARNINGS_DETECTED` - אזהרות פונט
+- `HTML_SLIDE_FUNCTION_FAILED` - בעיה בפתיחת שקפים
+- `PERFORMANCE_SLOW` - ביצועים איטיים
+- `MAIN_EXECUTION_FAILED` - כשל בהרצת תוכנית ראשית
 
 ### 🔧 פתרון בעיות נפוצות
 
