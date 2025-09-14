@@ -62,6 +62,27 @@ probability_project/
     └── ...
 ```
 
+### 🔄 עדכון פרויקט קיים
+
+אם כבר הורדת את הפרויקט בעבר וברצונך לעדכן לגרסה החדשה:
+
+```bash
+# נווט לתיקיית הפרויקט
+cd C:\Projects\probability-information-theory
+
+# ודא שהסביבה הוירטואלית פעילה
+venv\Scripts\activate
+
+# משוך את העדכונים האחרונים מ-GitHub
+git pull origin main
+
+# עדכן את החבילות (במקרה שהוספתי חבילות חדשות)
+pip install -r requirements.txt
+
+# בדוק שהכל עובד
+python main.py --list
+```
+
 ### 🚀 התקנה
 
 #### **📋 דרישות מוקדמות:**
@@ -310,6 +331,33 @@ kill -9 <PID>   # עצירה כפויה (Linux/Mac)
 - **הטסטים ימשיכו אוטומטית** - לאחר סגירת החלונות
 
 ### 🔧 פתרון בעיות נפוצות
+
+#### **בעיה: "Font family 'Arial Unicode MS' not found"**
+**✅ תוקן בגרסה 1.0.0!**
+
+הבעיה נפתרה אוטומטית - הקוד עודכן להשתמש בפונטים זמינים בלבד.
+
+אם עדיין רואה אזהרות פונט:
+```bash
+# ודא שיש לך את הגרסה החדשה:
+git pull origin main
+pip install -r requirements.txt
+
+# הרץ שוב - אמור לעבוד ללא אזהרות
+python main.py --test
+```
+
+#### **בעיה: שקף HTML לא נפתח**
+```bash
+# ודא שקובץ ה-HTML קיים בתיקיית השקף
+dir slide01\slide1.html
+
+# פתח ידנית:
+start slide01\slide1.html
+
+# או בדפדפן:
+# פתח File -> Open -> נווט לתיקיית הפרויקט -> slide01 -> slide1.html
+```
 
 #### **בעיה: Python לא מזוהה**
 ```bash

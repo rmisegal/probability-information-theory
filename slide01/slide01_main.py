@@ -17,23 +17,32 @@ import os
 import sys
 from pathlib import Path
 
-# Suppress matplotlib warnings
+# Suppress matplotlib warnings including font warnings
 import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning, module="matplotlib")
 warnings.filterwarnings("ignore", category=UserWarning, module="matplotlib")
+warnings.filterwarnings("ignore", message="findfont: Font family.*not found")
 
-# Set font support
-plt.rcParams['font.family'] = ['DejaVu Sans', 'Arial Unicode MS', 'Tahoma']
+# Set font support - use only default available fonts
+plt.rcParams['font.family'] = ['sans-serif']
 plt.rcParams['axes.unicode_minus'] = False
 
 def show_slide():
     """Display HTML slide"""
     slide_path = Path(__file__).parent / "slide1.html"
     if slide_path.exists():
-        webbrowser.open(f"file://{slide_path.absolute()}")
-        print("Slide opened in browser")
+        try:
+            # Try to open with default browser
+            webbrowser.open(f"file://{slide_path.absolute()}")
+            print(f"Slide opened in browser: {slide_path}")
+        except Exception as e:
+            print(f"Could not open slide automatically: {e}")
+            print(f"Please open manually: {slide_path.absolute()}")
     else:
-        print("Slide file not found")
+        print(f"Slide file not found: {slide_path}")
+        print("Available files in directory:")
+        for file in Path(__file__).parent.glob("*.html"):
+            print(f"  - {file.name}")
 
 def calculate_dice_probabilities():
     """Calculate probabilities for fair dice roll"""
