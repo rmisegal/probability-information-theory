@@ -64,45 +64,145 @@ probability_project/
 
 ### 🚀 התקנה
 
-1. **שכפול הפרויקט**:
+#### **📋 דרישות מוקדמות:**
+- **Python 3.8+** - הורד מ: https://www.python.org/downloads/
+- **Git** - הורד מ: https://git-scm.com/download/win
+- **Command Prompt או PowerShell** (Windows 11)
+
+#### **📥 שלב 1: הורדת הפרויקט מ-GitHub**
+
+פתח **Command Prompt** או **PowerShell** והרץ:
+
 ```bash
-git clone <repository-url>
-cd probability_project
+# יצירת תיקייה לפרויקט
+mkdir C:\Projects
+cd C:\Projects
+
+# שכפול הרפוזיטורי
+git clone https://github.com/rmisegal/probability-information-theory.git
+
+# מעבר לתיקיית הפרויקט
+cd probability-information-theory
 ```
 
-2. **יצירת סביבה וירטואלית** (מומלץ):
+#### **🐍 שלב 2: יצירת סביבה וירטואלית**
+
 ```bash
+# יצירת סביבה וירטואלית
 python -m venv venv
-source venv/bin/activate  # Linux/Mac
-# או
-venv\Scripts\activate     # Windows
+
+# הפעלת הסביבה הוירטואלית
+venv\Scripts\activate
+
+# וידוא שהסביבה פעילה (אמור להופיע (venv) בתחילת השורה)
 ```
 
-3. **התקנת חבילות**:
+#### **📦 שלב 3: התקנת חבילות**
+
 ```bash
+# עדכון pip לגרסה האחרונה
+python -m pip install --upgrade pip
+
+# התקנת כל החבילות הנדרושות
 pip install -r requirements.txt
+
+# וידוא התקנה תקינה
+pip list
 ```
 
 ### 💻 שימוש
 
-#### הרצת שקף יחיד
+#### **🧪 שלב 4: הרצת בדיקות**
+
 ```bash
-python main.py --slide 3
+# הרצת כל הטסטים
+python main.py --test
+
+# או באמצעות pytest ישירות
+python -m pytest tests/ -v
+
+# הרצת טסט ספציפי
+python -m pytest tests/test_slide01.py -v
 ```
 
-#### הרצת כל השקפים
-```bash
-python main.py --all
-```
+#### **▶️ שלב 5: הרצת הפרויקט**
 
-#### הצגת רשימת השקפים
+##### **הצגת אפשרויות:**
 ```bash
 python main.py --list
 ```
 
-#### הרצת טסטים
+##### **הרצת שקף יחיד:**
 ```bash
-python main.py --test
+# הרצת שקף 1
+python main.py --slide 1
+
+# הרצת שקף 3
+python main.py --slide 3
+```
+
+##### **הרצת כל השקפים:**
+```bash
+python main.py --all
+```
+
+##### **הרצת שקף ספציפי עם תפריט אינטראקטיבי:**
+```bash
+# מעבר לתיקיית שקף
+cd slide01
+
+# הרצה אינטראקטיבית
+python slide01_main.py --interactive
+```
+
+#### **🌐 שלב 6: צפייה בשקפים**
+
+השקפים יפתחו אוטומטית בדפדפן, או ניתן לפתוח ידנית:
+
+```bash
+# פתיחת שקף 1
+start slide01\slide1.html
+
+# פתיחת שקף 2
+start slide02\slide2.html
+```
+
+### 🔧 פתרון בעיות נפוצות
+
+#### **בעיה: Python לא מזוהה**
+```bash
+# הוסף Python ל-PATH או השתמש בנתיב מלא
+C:\Users\[USERNAME]\AppData\Local\Programs\Python\Python311\python.exe main.py --list
+```
+
+#### **בעיה: חבילות לא מותקנות**
+```bash
+# וודא שהסביבה הוירטואלית פעילה
+venv\Scripts\activate
+
+# התקן חבילות בודדות
+pip install numpy matplotlib seaborn scipy pandas pytest
+```
+
+#### **בעיה: שגיאות בטסטים**
+```bash
+# הרץ טסט בודד לאבחון
+python -m pytest tests/test_slide01.py::TestSlide01::test_calculate_dice_probabilities -v
+```
+
+### 💡 טיפים שימושיים
+
+1. **שמירת הסביבה:** תמיד הפעל `venv\Scripts\activate` לפני עבודה
+2. **יציאה מהסביבה:** `deactivate`
+3. **עדכון הפרויקט:** `git pull origin main`
+4. **צפייה בלוגים:** הוסף `--verbose` לפקודות
+5. **שמירת תוצאות:** הגרפים נשמרים אוטומטית בתיקיות השקפים
+
+### 🎯 דוגמה מלאה להרצה
+```bash
+cd C:\Projects\probability-information-theory
+venv\Scripts\activate
+python main.py --slide 1
 ```
 
 ### 📊 השקפים
